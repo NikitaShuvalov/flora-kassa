@@ -1,0 +1,55 @@
+{
+    "cash_total": 5298.0,
+    "sales": [
+        {
+            "date": "2025-09-21",
+            "shift": "Ночь",
+            "shift_person": "Никита",
+            "sale": "букет",
+            "price": 2970.0,
+            "pay_method": "Наличные"
+        },
+        {
+            "date": "2025-09-21",
+            "shift": "Ночь",
+            "shift_person": "Никита",
+            "sale": "букет",
+            "price": 2610.0,
+            "pay_method": "Перевод"
+        },
+        {
+            "date": "2025-09-21",
+            "shift": "Ночь",
+            "shift_person": "Никита",
+            "sale": "игрушка",
+            "price": 1950.0,
+            "pay_method": "Перевод"
+        },
+        {
+            "date": "2025-09-21",
+            "shift": "Ночь",
+            "shift_person": "Никита",
+            "sale": "букет",
+            "price": 1500.0,
+            "pay_method": "Наличные"
+        },
+        {
+            "date": "2025-09-21",
+            "shift": "Ночь",
+            "shift_person": "Никита",
+            "sale": "букет",
+            "price": 2385.0,
+            "pay_method": "Перевод"
+        }
+    ],
+    "expenses": [
+        {
+            "date": "2025-09-21",
+            "shift": "Ночь",
+            "shift_person": "Никита",
+            "amount": 800.0,
+            "description": "зп"
+        }
+    ],
+    "closed_at": "2025-09-23T22:48:56.652196"
+}

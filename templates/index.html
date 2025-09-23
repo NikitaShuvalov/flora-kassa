@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flora Kassa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f7;
+            padding: 32px;
+            color: #1c1c1e;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .form-section {
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #1c1c1e;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 12px;
+            border: 1px solid #d1d1d6;
+            background: #fefefe;
+            height: 46px;
+        }
+
+        .btn {
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: none;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #34c759, #28a745);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline-danger {
+            background: none;
+            color: #ff3b30;
+            border: 2px solid #ff3b30;
+        }
+
+        .btn-outline-danger:hover {
+            background: #ff3b30;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline-primary {
+            background: none;
+            color: #0a84ff;
+            border: 2px solid #0a84ff;
+        }
+
+        .btn-outline-primary:hover {
+            background: #0a84ff;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .table-wrapper {
+            max-height: 60vh;
+            overflow: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead th {
+            background: #f2f2f7;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            font-weight: 500;
+            color: #1c1c1e;
+        }
+
+        tfoot th {
+            font-weight: 500;
+        }
+
+        td {
+            color: #1c1c1e;
+        }
+
+        .text-end.text-success {
+            color: #34c759 !important;
+        }
+
+        .table-wrapper table tr:hover {
+            background-color: #f2f2f7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Кассовый учёт</h1>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 form-section">
+                <form id="saleForm" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="dateInput" class="form-label">Дата</label>
+                        <input id="dateInput" type="date" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label d-block">Смена</label>
+                        <div class="btn-group" role="group">
+                            <input type="radio" class="btn-check" name="shift" id="shiftDay" value="День"
+                                autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="shiftDay">День</label>
+                            <input type="radio" class="btn-check" name="shift" id="shiftNight" value="Ночь"
+                                autocomplete="off">
+                            <label class="btn btn-outline-primary" for="shiftNight">Ночь</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" id="shiftPersonWrapper">
+                        <label for="shiftPerson" class="form-label">Сменщик</label>
+                        <select id="shiftPerson" class="form-select">
+                            <option value="">Выберите сменщика...</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3" id="startCashWrapper">
+                        <label for="startCash" class="form-label">Стартовая сумма кассы</label>
+                        <input id="startCash" type="number" min="0" step="0.01" class="form-control" placeholder="0.00">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="saleInput" class="form-label">Продажа</label>
+                        <input id="saleInput" type="text" class="form-control" placeholder="Например: букет">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="priceInput" class="form-label">Цена продажи</label>
+                        <input id="priceInput" type="number" min="0" step="0.01" class="form-control"
+                            placeholder="0.00">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="payMethod" class="form-label">Способ оплаты</label>
+                        <select id="payMethod" class="form-select">
+                            <option value="">Выберите...</option>
+                            <option value="Наличные">Наличные</option>
+                            <option value="Перевод">Перевод</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="expenseAmount" class="form-label">Траты — сумма</label>
+                        <input id="expenseAmount" type="number" min="0" step="0.01" class="form-control"
+                            placeholder="0.00">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="expenseDesc" class="form-label">Траты — на что</label>
+                        <input id="expenseDesc" type="text" class="form-control"
+                            placeholder="Например: упаковка, проезд">
+                    </div>
+
+                    <div class="col-md-4 text-end d-flex gap-2">
+                        <button type="submit" class="btn btn-success w-100">Добавить запись</button>
+                        <button type="button" class="btn btn-outline-danger w-100" id="closeShiftBtn">Закрыть
+                            смену</button>
+                        <button type="button" class="btn btn-outline-primary w-100" id="historyBtn"
+                            data-bs-toggle="modal" data-bs-target="#historyModal">История кассы</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h5>Журнал продаж</h5>
+                <div class="table-wrapper bg-white p-2 rounded">
+                    <table class="table table-hover mb-0" id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Дата</th>
+                                <th>Смена</th>
+                                <th>Сменщик</th>
+                                <th>Продажа</th>
+                                <th>Цена продажи</th>
+                                <th>Способ оплаты</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="5" class="text-end text-success">Касса (нал):</th>
+                                <th id="cashTotal" class="text-success">0.00</th>
+                                <th colspan="2"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h5>Журнал трат</h5>
+                <div class="table-wrapper bg-white p-2 rounded">
+                    <table class="table table-hover mb-0" id="expensesTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Дата</th>
+                                <th>Смена</th>
+                                <th>Сменщик</th>
+                                <th>Сумма</th>
+                                <th>На что</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-end">Итого трат:</th>
+                                <th id="totalExpenses">0.00</th>
+                                <th colspan="2"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- История кассы -->
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyModalLabel">История кассы</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-wrapper">
+                        <table class="table table-hover mb-0" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Дата</th>
+                                    <th>Смена</th>
+                                    <th>Сменщик</th>
+                                    <th>Продажа</th>
+                                    <th>Цена продажи</th>
+                                    <th>Способ оплаты</th>
+                                    <th>Траты</th>
+                                    <th>На что</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const saleForm = document.getElementById('saleForm');
+            const salesTableBody = document.querySelector('#salesTable tbody');
+            const expensesTableBody = document.querySelector('#expensesTable tbody');
+            const totalExpensesCell = document.getElementById('totalExpenses');
+            const cashTotalCell = document.getElementById('cashTotal');
+            const shiftPersonSelect = document.getElementById('shiftPerson');
+            const startCashInput = document.getElementById('startCash');
+            const closeShiftBtn = document.getElementById('closeShiftBtn');
+            const historyBtn = document.getElementById('historyBtn');
+            const historyTableBody = document.querySelector('#historyTable tbody');
+
+            let rowIdCounterSales = 0;
+            let rowIdCounterExpenses = 0;
+
+            const shiftPersons = { "День": ["Апа"], "Ночь": ["Никита", "Диля"] };
+
+            function formatNumber(n) { return Number(n).toFixed(2); }
+
+            function updateTotals() {
+                let startCash = Number(startCashInput.value) || 0;
+                let cashSales = 0;
+                salesTableBody.querySelectorAll('tr').forEach(tr => {
+                    const price = parseFloat(tr.children[5].textContent) || 0;
+                    const pay_method = tr.children[6].textContent.trim();
+                    if (pay_method === 'Наличные') cashSales += price;
+                });
+
+                let totalExp = 0;
+                expensesTableBody.querySelectorAll('tr').forEach(tr => {
+                    const amount = parseFloat(tr.children[4].textContent) || 0;
+                    totalExp += amount;
+                });
+
+                const cashTotal = startCash + cashSales - totalExp;
+                cashTotalCell.textContent = formatNumber(cashTotal);
+                totalExpensesCell.textContent = formatNumber(totalExp);
+            }
+
+            function escapeHtml(text) {
+                if (!text && text !== 0) return '';
+                return String(text)
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", "&#039;");
+            }
+
+            function createRow(data, isSales = true) {
+                const tr = document.createElement('tr');
+                if (isSales) {
+                    rowIdCounterSales++;
+                    tr.dataset.rowId = rowIdCounterSales;
+                    tr.innerHTML = `
+                    <td>${rowIdCounterSales}</td>
+                    <td>${data.date || ''}</td>
+                    <td>${data.shift || ''}</td>
+                    <td>${data.shift_person || ''}</td>
+                    <td>${escapeHtml(data.sale)}</td>
+                    <td class="text-end">${data.price !== '' ? formatNumber(data.price) : ''}</td>
+                    <td>${data.pay_method || ''}</td>
+                    <td><button class="btn btn-sm btn-outline-danger btn-delete">Удалить</button></td>
+                `;
+                } else {
+                    rowIdCounterExpenses++;
+                    tr.dataset.rowId = rowIdCounterExpenses;
+                    tr.innerHTML = `
+                    <td>${rowIdCounterExpenses}</td>
+                    <td>${data.date || ''}</td>
+                    <td>${data.shift || ''}</td>
+                    <td>${data.shift_person || ''}</td>
+                    <td class="text-end">${data.amount !== '' ? formatNumber(data.amount) : ''}</td>
+                    <td>${escapeHtml(data.description)}</td>
+                    <td><button class="btn btn-sm btn-outline-danger btn-delete">Удалить</button></td>
+                `;
+                }
+                return tr;
+            }
+
+            function populateShiftPersons(shift) {
+                const selected = shiftPersonSelect.value;
+                shiftPersonSelect.innerHTML = '<option value="">Выберите сменщика...</option>';
+                if (shiftPersons[shift]) {
+                    shiftPersons[shift].forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p;
+                        opt.textContent = p;
+                        shiftPersonSelect.appendChild(opt);
+                    });
+                }
+                shiftPersonSelect.value = selected;
+            }
+
+            document.querySelectorAll('input[name="shift"]').forEach(r =>
+                r.addEventListener('change', e => populateShiftPersons(e.target.value))
+            );
+
+            saleForm.addEventListener('submit', ev => {
+                ev.preventDefault();
+                const date = document.getElementById('dateInput').value;
+                const shift = document.querySelector('input[name="shift"]:checked').value;
+                const shift_person = shiftPersonSelect.value;
+                const sale = document.getElementById('saleInput').value.trim();
+                const priceRaw = document.getElementById('priceInput').value;
+                const pay_method = document.getElementById('payMethod').value;
+                const expenseAmountRaw = document.getElementById('expenseAmount').value;
+                const description = document.getElementById('expenseDesc').value.trim();
+
+                if (!startCashInput.value) startCashInput.value = "0";
+
+                const price = priceRaw === '' ? '' : Number(priceRaw);
+                const amount = expenseAmountRaw === '' ? '' : Number(expenseAmountRaw);
+
+                const rowData = { date, shift, shift_person, sale, price, pay_method, amount, description };
+
+                if (price !== '' && pay_method) {
+                    const newRow = createRow(rowData, true);
+                    salesTableBody.appendChild(newRow);
+                }
+
+                if (amount !== '' || description) {
+                    const newRow = createRow(rowData, false);
+                    expensesTableBody.appendChild(newRow);
+                }
+
+                updateTotals();
+
+                // Сброс полей
+                document.getElementById('saleInput').value = '';
+                document.getElementById('priceInput').value = '';
+                document.getElementById('payMethod').value = '';
+                document.getElementById('expenseAmount').value = '';
+                document.getElementById('expenseDesc').value = '';
+            });
+
+            function handleDelete(ev, isSales = true) {
+                const btn = ev.target.closest('.btn-delete'); if (!btn) return;
+                const tr = btn.closest('tr'); if (!tr) return;
+                tr.remove();
+                if (isSales) {
+                    rowIdCounterSales = salesTableBody.querySelectorAll('tr').length;
+                    Array.from(salesTableBody.querySelectorAll('tr')).forEach((r, idx) => r.children[0].textContent = idx + 1);
+                } else {
+                    rowIdCounterExpenses = expensesTableBody.querySelectorAll('tr').length;
+                    Array.from(expensesTableBody.querySelectorAll('tr')).forEach((r, idx) => r.children[0].textContent = idx + 1);
+                }
+                updateTotals();
+            }
+
+            salesTableBody.addEventListener('click', ev => handleDelete(ev, true));
+            expensesTableBody.addEventListener('click', ev => handleDelete(ev, false));
+
+            closeShiftBtn.addEventListener('click', async () => {
+                const sales = Array.from(salesTableBody.querySelectorAll('tr')).map(tr => ({
+                    date: tr.children[1].textContent,
+                    shift: tr.children[2].textContent,
+                    shift_person: tr.children[3].textContent,
+                    sale: tr.children[4].textContent,
+                    price: parseFloat(tr.children[5].textContent) || 0,
+                    pay_method: tr.children[6].textContent
+                }));
+
+                const expenses = Array.from(expensesTableBody.querySelectorAll('tr')).map(tr => ({
+                    date: tr.children[1].textContent,
+                    shift: tr.children[2].textContent,
+                    shift_person: tr.children[3].textContent,
+                    amount: parseFloat(tr.children[4].textContent) || 0,
+                    description: tr.children[5].textContent
+                }));
+
+                try {
+                    const response = await fetch('/close_shift', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sales,
+                            expenses,
+                            start_cash: parseFloat(startCashInput.value) || 0
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        alert(`Смена закрыта! Файл: ${result.file}`);
+                        // Очищаем таблицы и сбрасываем форму
+                        salesTableBody.innerHTML = '';
+                        expensesTableBody.innerHTML = '';
+                        rowIdCounterSales = 0;
+                        rowIdCounterExpenses = 0;
+                        startCashInput.value = '0';
+                        cashTotalCell.textContent = '0.00';
+                        totalExpensesCell.textContent = '0.00';
+                        saleForm.reset();
+                        document.querySelector('input[name="shift"][value="День"]').checked = true;
+                        document.getElementById('dateInput').valueAsDate = new Date();
+                        populateShiftPersons('День');
+                    } else {
+                        alert('Ошибка при закрытии смены');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Не удалось сохранить смену');
+                }
+            });
+
+            historyBtn.addEventListener('click', () => {
+                historyTableBody.innerHTML = '';
+            });
+
+            document.getElementById('dateInput').valueAsDate = new Date();
+            populateShiftPersons('День');
+
+        })();
+    </script>
+
+
+
+</body>
+
+</html>
