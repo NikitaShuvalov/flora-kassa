@@ -5,7 +5,8 @@ import json
 from datetime import datetime
 import os
 from app.schemas.schemas import ShiftCloseRequest
-from app.services.send_telegram_report import send_telegram_report
+from app.services.telegram import send_telegram_report
+from app.services.shifts import calculate_cash_total
 
 app = FastAPI()
 
@@ -45,13 +46,7 @@ async def close_shift(data: ShiftCloseRequest = Body(...)):
     now = datetime.now()
     shift_type = "день" if 8 <= now.hour < 20 else "ночь"
 
-    # Вычисляем общую сумму налички
-    cash_total = data.start_cash
-    for sale in data.sales:
-        if sale.pay_method == "Наличные":
-            cash_total += sale.price
-    for exp in data.expenses:
-        cash_total -= exp.amount
+    cash_total = calculate_cash_total(data.start_cash, data.sales, data.expenses)
 
     # Формируем объект для сохранения
     shift_data = {
