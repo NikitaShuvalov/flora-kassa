@@ -8,10 +8,10 @@ class Sale(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(String, nullable=False)
     shift = Column(String, nullable=False)
-    shift_person = Column(String, nullable=False)  # обязательно
+    shift_person = Column(String, nullable=False)
     sale = Column(String, nullable=False)
     price = Column(Float, nullable=False)
-    pay_method = Column(String, nullable=False)  # обязательно
+    pay_method = Column(String, nullable=False)
 
 
 class Expense(Base):
@@ -20,6 +20,6 @@ class Expense(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(String, nullable=False)
     shift = Column(String, nullable=False)
-    shift_person = Column(String, nullable=False)  # обязательно
+    shift_person = Column(String, nullable=False)
     amount = Column(Float, nullable=False)
     description = Column(String, nullable=False)

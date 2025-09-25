@@ -1,0 +1,26 @@
+{
+    "date": "2025-09-25",
+    "shift": "день",
+    "shift_person": "Апа",
+    "cash_total": 2000.0,
+    "sales": [
+        {
+            "date": "2025-09-25",
+            "shift": "День",
+            "shift_person": "Апа",
+            "sale": "букет",
+            "price": 1500.0,
+            "pay_method": "Наличные"
+        }
+    ],
+    "expenses": [
+        {
+            "date": "2025-09-25",
+            "shift": "День",
+            "shift_person": "Апа",
+            "amount": 2000.0,
+            "description": "зп"
+        }
+    ],
+    "closed_at": "2025-09-25T18:08:54.872090"
+}
