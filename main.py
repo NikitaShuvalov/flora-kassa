@@ -12,8 +12,15 @@ from app.services.shifts import (
     build_shift_data,
     format_shift_report,
 )
+from app.models.models import create_db_and_tables, SessionDep, Sale, Expense
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
+
 
 # Указываем папку с шаблонами
 templates = Jinja2Templates(directory="templates")
@@ -44,7 +51,7 @@ def get_history():
 
 
 @app.post("/close_shift")
-async def close_shift(data: ShiftCloseRequest = Body(...)):
+async def close_shift(session: SessionDep, data: ShiftCloseRequest = Body(...)):
     os.makedirs("shifts", exist_ok=True)
     now = datetime.now()
     shift_type = get_shift_type(now)
@@ -56,8 +63,31 @@ async def close_shift(data: ShiftCloseRequest = Body(...)):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(shift_data, f, ensure_ascii=False, indent=4)
 
-    report = format_shift_report(shift_data)
+    for s in data.sales:
+        sale = Sale(
+            date=s.date,
+            shift=s.shift,
+            shift_person=s.shift_person,
+            sale=s.sale,
+            price=s.price,
+            pay_method=s.pay_method,
+        )
+        session.add(sale)
 
+    # Сохраняем расходы в БД
+    for e in data.expenses:
+        expense = Expense(
+            date=e.date,
+            shift=e.shift,
+            shift_person=e.shift_person,
+            amount=e.amount,
+            description=e.description,
+        )
+        session.add(expense)
+
+    session.commit()
+
+    report = format_shift_report(shift_data)
     send_telegram_report(report)
 
     return JSONResponse(
