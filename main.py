@@ -37,17 +37,38 @@ async def read_root(request: Request):
 
 
 @app.get("/history")
-def get_history():
-    history_list = []
-    for filename in os.listdir("shifts"):
-        if filename.endswith(".json"):
-            with open(os.path.join("shifts", filename), "r", encoding="utf-8") as f:
-                data = json.load(f)
-                history_list.extend(data.get("sales", []))
-                history_list.extend(data.get("expenses", []))
-    # Сортировка по дате
-    history_list.sort(key=lambda x: x.get("date", ""))
-    return history_list
+def get_history(session: SessionDep):
+    """
+    Получение всей истории для фронта.
+    Возвращаем список продаж и расходов отдельно для фронта.
+    """
+    sales = session.query(Sale).all()
+    expenses = session.query(Expense).all()
+
+    sales_list = [
+        {
+            "date": s.date,
+            "shift": s.shift,
+            "shift_person": s.shift_person,
+            "sale": s.sale,
+            "price": s.price,
+            "pay_method": s.pay_method,
+        }
+        for s in sales
+    ]
+
+    expenses_list = [
+        {
+            "date": e.date,
+            "shift": e.shift,
+            "shift_person": e.shift_person,
+            "amount": e.amount,
+            "description": e.description,
+        }
+        for e in expenses
+    ]
+
+    return {"sales": sales_list, "expenses": expenses_list}
 
 
 @app.post("/close_shift")
